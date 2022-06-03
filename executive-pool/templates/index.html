@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Runnable</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+         $(function () {
+             
+             $('#run_function_button').click(function () {
+                 let confirm_text = 'You are to run V8 JavaScript code ?';
+                 let confirm_result = confirm(confirm_text);
+                 if (confirm_result !== true) {
+                     alert('Canceled');
+                     return
+                 }
+
+                 let runnable_payload = {
+                     'runnable_function': $('#runnabe_function').val(),
+                 };
+
+                 $.ajax({
+                     url: '/compute-request',
+                     type: 'POST',
+                     contentType: 'application/json',
+                     data: JSON.stringify(runnable_payload),
+                     success: function (response) {
+                         console.info("yellow", response);
+                         $('#run_function_result').text(response);
+                        //  if (response.message == 'fail') {
+                        //      alert('Send fail')
+                        //  } else {
+                        //      alert('Send success');
+                        //  }
+                     },
+                     error: function (response) {
+                         console.error(response);
+                         alert('Send failed');
+                     }
+                 })
+             });
+
+
+         })
+
+    </script>
+</head>
+<body>
+    <div class="container">
+
+        <div class="card  mb-3 mt-4">
+            <div class="card-body">
+                <h1>Runnable</h1>
+                
+                <div class="input-group mb-3">
+                     
+                    <textarea class="form-control bg-dark text-light" id="runnabe_function" rows="7" ></textarea>
+                </div>
+                  
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <button type="button" class="btn btn-warning" id="run_function_button">Run function</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+              function result
+            </div>
+            <div class="card-body">
+              <blockquote class="blockquote mb-0">
+                <footer class="blockquote-footer"><div id="run_function_result"></div><cite title="Source Title"></cite></footer>
+              </blockquote>
+            </div>
+          </div>
+    </div>
+</body>
+</html>
